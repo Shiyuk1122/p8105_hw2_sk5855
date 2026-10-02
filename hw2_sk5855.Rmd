@@ -1,0 +1,31 @@
+---
+title: "p8105_hw2_sk5855"
+author: "Shiyu KANG"
+date: "2026-10-02"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r problem1}
+subway_df = 
+  readxl::read_xlsx("NYC_Transit_Subway_Entrance_And_Exit_Data.xlsx" , na = c("","NA",".")) |>
+  janitor::clean_names()
+
+subway_df_selected = 
+  subway_df |>
+  select(line:entry, vending, ada) |>
+  mutate(
+    entry = case_match(entry, "YES" ~ 1, "NO" ~ 0)
+  )
+
+
+
+```
+
+
