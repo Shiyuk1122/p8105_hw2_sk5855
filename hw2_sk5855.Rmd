@@ -12,7 +12,7 @@ library(tidyverse)
 ```
 
 
-```{r problem1}
+```{r problem1 data preparing}
 subway_df = 
   readxl::read_xlsx("NYC_Transit_Subway_Entrance_And_Exit_Data.xlsx" , na = c("","NA",".")) |>
   janitor::clean_names()
@@ -23,9 +23,42 @@ subway_df_selected =
   mutate(
     entry = case_match(entry, "YES" ~ 1, "NO" ~ 0)
   )
-
-
-
 ```
 
+The dataset contains line, station name and station latitude/longitude, which offers information on the location of stations. Route 1-10 indicates whether and what lines passed this station, 11 lines can pass a single station at most, which is Time Square station. 
+For data cleaning, I first uniform the "NA" display. Then uses clean_names to lowercase all variables and add "_" between words. Then select specified variables, using case_match to alter the variable type of entry. The row of the resulting dataset is `r nrow(subway_df_selected)`, the column is `r ncol(subway_df_selected)`. They are untidy. 
+
+```{r problem1 questions}
+subway_df_selected = 
+  subway_df_selected |>
+     mutate(
+       line_and_station_name = paste0(line,station_name)
+  )
+
+subway_df_selected |> 
+  distinct(line_and_station_name) |>
+  nrow() 
+
+subway_df_selected |>
+  filter(ada == TRUE) |>
+  distinct(line_and_station_name) |>
+  nrow() 
+  
+nrow(filter(subway_df_selected,vending == "NO"))/nrow(subway_df_selected)
+
+subway_df_reformat = 
+  subway_df_selected |>
+  pivot_longer (
+    cols = route1:route11,
+    names_to = "Route_number",
+    names_prefix = "route",
+    names_transform = list(Route_number = as.integer),
+    values_to = "Route_name",
+    values_transform = list(Route_name = as.character),
+    values_drop_na = TRUE
+  )
+
+
+  
+```
 
