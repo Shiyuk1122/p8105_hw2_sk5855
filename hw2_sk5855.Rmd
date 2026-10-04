@@ -58,7 +58,58 @@ subway_df_reformat =
     values_drop_na = TRUE
   )
 
+subway_df_reformat |>
+  filter(Route_name == "A") |>
+  distinct(line_and_station_name) |>
+  nrow()
 
-  
+subway_df_reformat |>
+  filter(Route_name == "A", ada == TRUE) |>
+  distinct(line_and_station_name) |>
+  nrow()
+```
+
+```{r problem 2}
+trash_df = 
+  readxl::read_xlsx(
+    "202509 Trash Wheel Collection Data.xlsx",
+    sheet = "Mr. Trash Wheel",
+    range = "A2:N709") |>
+  janitor::clean_names() |>
+  mutate(
+    sports_balls = as.integer(round(sports_balls))
+  )
+
+professor_df = 
+  readxl::read_xlsx(
+    "202509 Trash Wheel Collection Data.xlsx",
+    sheet = "Professor Trash Wheel",
+    range = "A2:M134") |>
+  janitor::clean_names() 
+
+gwynns_df = 
+  readxl::read_xlsx(
+    "202509 Trash Wheel Collection Data.xlsx",
+    sheet = "Gwynns Falls Trash Wheel",
+    range = "A2:L351") |>
+  janitor::clean_names() 
+
+trash_df = trash_df |>
+  mutate(
+    trash_wheel = "Mr. Trash Wheel"
+  )
+
+professor_df = professor_df |>
+  mutate(
+    trash_wheel = "Professor Trash Wheel"
+  )
+
+gwynns_df = gwynns_df |>
+  mutate(
+    trash_wheel = "Gwynns Falls Trash Wheel"
+  )
+
+combined_df = 
+  bind_rows(trash_df, professor_df, gwynns_df)
 ```
 
