@@ -1,17 +1,22 @@
 ---
 title: "p8105_hw2_sk5855"
 author: "Shiyu KANG"
-date: "2026-10-02"
+date: "2026-10-04"
 output: github_document
 editor_options: 
   chunk_output_type: console
 ---
 
-```{r}
+```{r setup, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set( 
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
 library(tidyverse)
 ```
 
-
+## Question 1: NYC Subway Data
 ```{r problem1 data preparing}
 subway_df = 
   readxl::read_xlsx("NYC_Transit_Subway_Entrance_And_Exit_Data.xlsx" , na = c("","NA",".")) |>
@@ -68,7 +73,10 @@ subway_df_reformat |>
   distinct(line_and_station_name) |>
   nrow()
 ```
+There are `r subway_df_reformat |> filter(Route_name == "A") |> distinct(line_and_station_name) |> nrow()` distinct stations serving the A train, of which `r subway_df_reformat |> filter(Route_name == "A", ada == TRUE) |> distinct(line_and_station_name) |> nrow()` are ADA-compliant.
 
+
+## Question 2: Trash Wheel Data
 ```{r problem 2}
 trash_df = 
   readxl::read_xlsx(
@@ -142,6 +150,8 @@ gwynnda_june_butts =
 The combined dataset contains `r nrow(combined_df)` observations and `r ncol(combined_df)` variables from Mr. Trash Wheel, Professor Trash Wheel, and Gwynnda. Each observation represents a dumpster collection, with the `trash_wheel` variable identifying its source. Key variables include `dumpster`, the dumpster number; `date`, the collection date; `weight_tons`, the weight of trash collected in tons; and `volume_cubic_yards`, its volume in cubic yards. The dataset also records counts of specific types of litter, such as `plastic_bottles`, `plastic_bags`, and `sports_balls`. Sports ball counts were rounded to the nearest integer and stored as integers. Variables unavailable for a particular trash wheel are represented by `NA` in the combined dataset.
 Professor Trash Wheel collected a total of `r total_weight` tons of trash. Gwynnda collected `r format(gwynnda_june_butts, scientific = FALSE)` cigarette butts in June 2022.
 
+
+## Question 3: MCI and Amyloid Data
 ```{r problem3}
 amyloid_df = 
   read_csv(
