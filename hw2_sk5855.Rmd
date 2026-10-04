@@ -109,7 +109,35 @@ gwynns_df = gwynns_df |>
     trash_wheel = "Gwynns Falls Trash Wheel"
   )
 
+trash_df = trash_df |>
+  mutate(year = as.integer(year))
+
+professor_df = professor_df |>
+  mutate(year = as.integer(year))
+
+gwynns_df = gwynns_df |>
+  mutate(year = as.integer(year))
+
 combined_df = 
   bind_rows(trash_df, professor_df, gwynns_df)
+
+total_weight = 
+  combined_df |>
+  filter(trash_wheel == "Professor Trash Wheel") |>
+  summarise(total_weight_tons = sum(weight_tons, na.rm = TRUE))
+
+gwynnda_june_butts =
+  combined_df |>
+  filter(
+    trash_wheel == "Gwynns Falls Trash Wheel",
+    year == 2022,
+    month == "June"
+  ) |>
+  summarise(
+    total_cigarette_butts = sum(cigarette_butts, na.rm = TRUE) 
+  ) |> 
+      pull(total_cigarette_butts)
 ```
 
+The combined dataset contains `r nrow(combined_df)` observations and `r ncol(combined_df)` variables from Mr. Trash Wheel, Professor Trash Wheel, and Gwynnda. Each observation represents a dumpster collection, with the `trash_wheel` variable identifying its source. Key variables include `dumpster`, the dumpster number; `date`, the collection date; `weight_tons`, the weight of trash collected in tons; and `volume_cubic_yards`, its volume in cubic yards. The dataset also records counts of specific types of litter, such as `plastic_bottles`, `plastic_bags`, and `sports_balls`. Sports ball counts were rounded to the nearest integer and stored as integers. Variables unavailable for a particular trash wheel are represented by `NA` in the combined dataset.
+Professor Trash Wheel collected a total of `r total_weight` tons of trash. Gwynnda collected `r format(gwynnda_june_butts, scientific = FALSE)` cigarette butts in June 2022.
