@@ -80,9 +80,9 @@ There are `r subway_df_reformat |> filter(Route_name == "A") |> distinct(line_an
 ```{r problem 2}
 trash_df = 
   readxl::read_xlsx(
-    "data/202509 Trash Wheel Collection Data.xlsx",
+    "data/202610 Trash Wheel Collection Data.xlsx",
     sheet = "Mr. Trash Wheel",
-    range = "A2:N709") |>
+    range = "A2:N742") |>
   janitor::clean_names() |>
   mutate(
     sports_balls = as.integer(round(sports_balls))
@@ -90,17 +90,23 @@ trash_df =
 
 professor_df = 
   readxl::read_xlsx(
-    "data/202509 Trash Wheel Collection Data.xlsx",
+    "data/202610 Trash Wheel Collection Data.xlsx",
     sheet = "Professor Trash Wheel",
-    range = "A2:M134") |>
-  janitor::clean_names() 
+    range = "A2:M139") |>
+  janitor::clean_names() |>
+  mutate(
+    plastic_bottles = as.numeric(
+      na_if(plastic_bottles, "dive")
+    )
+  )
 
 gwynns_df = 
   readxl::read_xlsx(
-    "data/202509 Trash Wheel Collection Data.xlsx",
-    sheet = "Gwynns Falls Trash Wheel",
-    range = "A2:L351") |>
-  janitor::clean_names() 
+    "data/202610 Trash Wheel Collection Data.xlsx",
+    sheet = "Gwynnda the Good Wheel of the W",
+    range = "A2:L394") |>
+  janitor::clean_names()
+  
 
 trash_df = trash_df |>
   mutate(
@@ -114,7 +120,7 @@ professor_df = professor_df |>
 
 gwynns_df = gwynns_df |>
   mutate(
-    trash_wheel = "Gwynns Falls Trash Wheel"
+    trash_wheel = "Gwynnda the Good Wheel of the W"
   )
 
 trash_df = trash_df |>
@@ -137,7 +143,7 @@ total_weight =
 gwynnda_june_butts =
   combined_df |>
   filter(
-    trash_wheel == "Gwynns Falls Trash Wheel",
+    trash_wheel == "Gwynnda the Good Wheel of the W",
     year == 2022,
     month == "June"
   ) |>
